@@ -4,7 +4,7 @@ namespace TaylorNetwork\MakeHTML;
 
 use Illuminate\Support\ServiceProvider;
 
-class MakeHTMLProvider extends ServiceProvider
+class MakeHTMLServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -14,7 +14,7 @@ class MakeHTMLProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'config/makehtml.php' => config_path('makehtml.php'),
+            __DIR__.'/config/makehtml.php' => config_path('makehtml.php'),
         ]);
     }
 
@@ -26,7 +26,7 @@ class MakeHTMLProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'config/makehtml.php', 'makehtml'
+            __DIR__.'/config/makehtml.php', 'makehtml'
         );
     }
 }
