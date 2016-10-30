@@ -1,0 +1,18 @@
+{
+    "name": "taylornetwork/make-html",
+    "description": "A trait for to convert plain text to html, inlcuding links.",
+    "require": {
+        "nahid/linkify": "^1.0"
+    },
+    "authors": [
+        {
+            "name": "Sam Taylor",
+            "email": "sam@taylornetwork.ca"
+        }
+    ],
+    "autoload": {
+    	"psr-4": {
+    		"TaylorNetwork\\MakeHTML\\": "src/"
+    	}
+    }
+}
