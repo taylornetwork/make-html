@@ -152,15 +152,7 @@ class HTMLGenerator
             unset($attributes[$this->externalKey]);
         }
 
-        $strAttributes = implode(' ',
-            array_map(
-                function ($value, $key) {
-                    return $key . '="' . $value . '"';
-                },
-                array_values($attributes),
-                array_keys($attributes)
-            )
-        );
+        $strAttributes = associative_implode('=', ' ', $attributes, false, true);
         
         $html = str_replace('{attr}', $strAttributes, $openPattern);
         
