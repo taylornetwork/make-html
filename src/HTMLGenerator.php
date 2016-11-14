@@ -154,7 +154,7 @@ class HTMLGenerator
 
         $strAttributes = implode(' ',
             array_map(
-                function ($key, $value) {
+                function ($value, $key) {
                     return $key . '="' . $value . '"';
                 },
                 array_values($attributes),
