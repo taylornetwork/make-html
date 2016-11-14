@@ -2,200 +2,39 @@
 
 namespace TaylorNetwork\MakeHTML;
 
-use Nahid\Linkify\Linkify;
 
 trait MakeHTML
 {
     /**
-     * Associative array of options to use with Nahid\Linkify
-     * see https://github.com/nahid/linkify
-     *
-     * @var array
-     */
-    protected $linkifyAttributes;
-
-    /**
-     * Stores the HTMLified text
-     *
-     * @var string
-     */
-    protected $HTMLText;
-
-    /**
-     * HTML void/singleton tags
+     * HTMLGenerator Instance
      * 
-     * @var array
+     * @var HTMLGenerator
      */
-    protected $voidTags;
+    public $HTMLGenerator;
 
     /**
-     * External Key Word
+     * Call HTMLGenerator->makeHTML
      * 
-     * @var string
-     */
-    protected $externalKey;
-
-    /**
-     * Open Tag Pattern
-     * 
-     * @var string
-     */
-    protected $openTagPattern;
-
-    /**
-     * Closing Tag Pattern
-     * 
-     * @var string
-     */
-    protected $closeTagPattern;
-
-    /**
-     * Void Tag Pattern
-     * 
-     * @var string
-     */
-    protected $voidTagPattern;
-
-    /**
-     * MakeHTML constructor.
-     */
-    public function __construct()
-    {
-        $this->linkifyAttributes = config('makehtml.linkifyAttributes', []);
-        $this->voidTags = config('makehtml.voidTags', []);
-        $this->externalKey = config('makehtml.externalKey', 'external');
-        $this->openTagPattern = config('makehtml.openTagPattern', '<{tag}>');
-        $this->closeTagPattern = config('makehtml.closeTagPattern', '</{tag}>');
-        $this->voidTagPattern = config('makehtml.voidTagPattern', null);
-    }
-
-    /**
-     * Set the HTMLText variable
-     *
-     * @param $text
-     * @return $this
-     */
-    public function setHTMLText($text)
-    {
-        $this->HTMLText = $text;
-        return $this;
-    }
-
-    /**
-     * Make the links clickable.
-     *
-     * @param $text
-     * @param array $options
-     * @return string
-     */
-    public function makeLinks($text, $options = [])
-    {
-        $linkify = new Linkify([ 'attr' => $this->linkifyAttributes, 'callback' => function($url, $defCaption, $isEmail){
-            if(!$isEmail)
-            {
-                $caption = substr($url, 7);
-                preg_match('/www\d{0,3}\./', $caption, $match);
-
-                if($match)
-                {
-                    $caption = substr($caption, strlen($match[0]) + strpos($caption, $match[0]));
-                }
-
-                $split = explode('/', $caption);
-
-                $caption = $split[0];
-
-                return '<a href="' . $url . '" target="_blank">' . $caption . '</a>';
-            }
-            return $url;
-        }]);
-
-        return $linkify->process($text, $options);
-    }
-
-    /**
-     * Convert line endings to <br> for HTML
-     *
-     * @param $text
-     * @return string
-     */
-    public function convertLineEndings($text)
-    {
-        return nl2br($text);
-    }
-    
-    /**
-     * The main function to use instead of calling everything individually.
-     *
-     * @param $text
+     * @param string $text
      * @return string
      */
     public function makeHTML($text)
     {
-        $this->setHTMLText($text);
-        $this->HTMLText = $this->makeLinks($this->HTMLText);
-        $this->HTMLText = $this->convertLineEndings($this->HTMLText);
-        
-        return $this->HTMLText;
+        return $this->getHTMLGeneratorInstance()->makeHTML($text);
     }
 
     /**
-     * Generate an HTML tag
+     * Get the generator instance, or create one.
      * 
-     * @param $tag
-     * @param $attributes
-     * @return string
+     * @return HTMLGenerator
      */
-    public function generateTag($tag, $attributes)
+    public function getHTMLGeneratorInstance()
     {
-        $openPattern = str_replace('{tag}', $tag, $this->openTagPattern);
-        $external = '';
-        
-        if(in_array($tag, $this->voidTags) && !empty($this->voidTagPattern) && $this->voidTagPattern != $this->openTagPattern)
+        if(!isset($this->HTMLGenerator) || !$this->HTMLGenerator instanceof HTMLGenerator)
         {
-            $openPattern = str_replace('{tag}', $tag, $this->voidTagPattern);
+            $this->HTMLGenerator = new HTMLGenerator();
         }
         
-        if(array_key_exists($this->externalKey, $attributes))
-        {
-            $external = $attributes[$this->externalKey];
-            unset($attributes[$this->externalKey]);
-        }
-
-        $strAttributes = implode(' ',
-            array_map(
-                function ($key, $value) {
-                    return $key . '="' . $value . '"';
-                },
-                array_values($attributes),
-                array_keys($attributes)
-            )
-        );
-        
-        $html = str_replace('{attr}', $strAttributes, $openPattern);
-        
-        if(!in_array($tag, $this->voidTags))
-        {
-            $html .= $external . str_replace('{tag}', $tag, $this->closeTagPattern);
-        }
-        
-        return $html;
-    }
-
-    /**
-     * Call for generate tag
-     *
-     * @param string $name
-     * @param array|string $arguments
-     * @return mixed
-     */
-    public function __call($name, $arguments)
-    {
-        if(strtolower(substr($name, -3)) == 'tag')
-        {
-            $tag = strtolower(substr($name, 0, strlen($name) - 3));
-            return $this->generateTag($tag, $arguments);
-        }
-        return false;
+        return $this->HTMLGenerator;
     }
 }
