@@ -25,7 +25,7 @@ if(!function_exists('associative_implode'))
      * 
      * @return string
      */
-    function associative_implode($glue, $separator, array $array, $quoteKeys = false, $quoteValues = false, $quote = '"')
+    function associative_implode($glue, $separator, array $array, $quoteKeys = false, $quoteValues = true, $quote = '"')
     {
         $keyQuote = '';
         $valQuote = '';
