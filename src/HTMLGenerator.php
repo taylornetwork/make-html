@@ -57,7 +57,7 @@ class HTMLGenerator
         $this->linkifyAttributes = config('makehtml.linkifyAttributes', []);
         $this->voidTags = config('makehtml.voidTags', []);
         $this->externalKey = config('makehtml.externalKey', 'external');
-        $this->openTagPattern = config('makehtml.openTagPattern', '<{tag}>');
+        $this->openTagPattern = config('makehtml.openTagPattern', '<{tag} {attr}>');
         $this->closeTagPattern = config('makehtml.closeTagPattern', '</{tag}>');
         $this->voidTagPattern = config('makehtml.voidTagPattern', null);
     }
@@ -184,7 +184,7 @@ class HTMLGenerator
         if(strtolower(substr($name, -3)) == 'tag')
         {
             $tag = strtolower(substr($name, 0, strlen($name) - 3));
-            return $this->generateTag($tag, $arguments);
+            return $this->generateTag($tag, $arguments[0]);
         }
         return false;
     }
