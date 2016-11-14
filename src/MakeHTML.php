@@ -12,9 +12,7 @@ trait MakeHTML
      *
      * @var array
      */
-    protected $linkifyAttributes = [
-        'target' => '_blank',
-    ];
+    protected $linkifyAttributes;
 
     /**
      * Stores the HTMLified text
@@ -22,6 +20,54 @@ trait MakeHTML
      * @var string
      */
     protected $HTMLText;
+
+    /**
+     * HTML void/singleton tags
+     * 
+     * @var array
+     */
+    protected $voidTags;
+
+    /**
+     * External Key Word
+     * 
+     * @var string
+     */
+    protected $externalKey;
+
+    /**
+     * Open Tag Pattern
+     * 
+     * @var string
+     */
+    protected $openTagPattern;
+
+    /**
+     * Closing Tag Pattern
+     * 
+     * @var string
+     */
+    protected $closeTagPattern;
+
+    /**
+     * Void Tag Pattern
+     * 
+     * @var string
+     */
+    protected $voidTagPattern;
+
+    /**
+     * MakeHTML constructor.
+     */
+    public function __construct()
+    {
+        $this->linkifyAttributes = config('makehtml.linkifyAttributes', []);
+        $this->voidTags = config('makehtml.voidTags', []);
+        $this->externalKey = config('makehtml.externalKey', 'external');
+        $this->openTagPattern = config('makehtml.openTagPattern', '<{tag}>');
+        $this->closeTagPattern = config('makehtml.closeTagPattern', '</{tag}>');
+        $this->voidTagPattern = config('makehtml.voidTagPattern', null);
+    }
 
     /**
      * Set the HTMLText variable
@@ -77,7 +123,7 @@ trait MakeHTML
     {
         return nl2br($text);
     }
-
+    
     /**
      * The main function to use instead of calling everything individually.
      *
@@ -91,5 +137,65 @@ trait MakeHTML
         $this->HTMLText = $this->convertLineEndings($this->HTMLText);
         
         return $this->HTMLText;
+    }
+
+    /**
+     * Generate an HTML tag
+     * 
+     * @param $tag
+     * @param $attributes
+     * @return string
+     */
+    public function generateTag($tag, $attributes)
+    {
+        $openPattern = str_replace('{tag}', $tag, $this->openTagPattern);
+        $external = '';
+        
+        if(in_array($tag, $this->voidTags) && !empty($this->voidTagPattern) && $this->voidTagPattern != $this->openTagPattern)
+        {
+            $openPattern = str_replace('{tag}', $tag, $this->voidTagPattern);
+        }
+        
+        if(array_key_exists($this->externalKey, $attributes))
+        {
+            $external = $attributes[$this->externalKey];
+            unset($attributes[$this->externalKey]);
+        }
+
+        $strAttributes = implode(' ',
+            array_map(
+                function ($key, $value) {
+                    return $key . '="' . $value . '"';
+                },
+                array_values($attributes),
+                array_keys($attributes)
+            )
+        );
+        
+        $html = str_replace('{attr}', $strAttributes, $openPattern);
+        
+        if(!in_array($tag, $this->voidTags))
+        {
+            $html .= $external . str_replace('{tag}', $tag, $this->closeTagPattern);
+        }
+        
+        return $html;
+    }
+
+    /**
+     * Call for generate tag
+     *
+     * @param string $name
+     * @param array|string $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        if(strtolower(substr($name, -3)) == 'tag')
+        {
+            $tag = strtolower(substr($name, 0, strlen($name) - 3));
+            return $this->generateTag($tag, $arguments);
+        }
+        return false;
     }
 }
