@@ -63,18 +63,6 @@ class HTMLGenerator
     }
 
     /**
-     * Set the HTMLText variable
-     *
-     * @param $text
-     * @return $this
-     */
-    public function setHTMLText($text)
-    {
-        $this->HTMLText = $text;
-        return $this;
-    }
-
-    /**
      * Make the links clickable.
      *
      * @param $text
