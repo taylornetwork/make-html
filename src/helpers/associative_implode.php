@@ -27,27 +27,17 @@ if(!function_exists('associative_implode'))
      */
     function associative_implode($glue, $separator, array $array, $quoteKeys = false, $quoteValues = true, $quote = '"')
     {
-        $keyQuote = '';
-        $valQuote = '';
-        
-        if($quoteKeys)
-        {   
-            $keyQuote = $quote;
-        }
-        
-        if($quoteValues)
-        {
-            $valQuote = $quote;
-        }
-        
+        $keyQuote = $quoteKeys ? $quote : '';
+        $valQuote = $quoteValues ? $quote : '';
+
         return implode($separator, 
             array_map(
-                function ($value, $key) use ($glue, $keyQuote, $valQuote)
+                function ($key, $value) use ($glue, $keyQuote, $valQuote)
                 {
                     return $keyQuote . $key . $keyQuote . $glue . $valQuote . $value . $valQuote;
                 },
-                array_values($array),
-                array_keys($array)
+                array_keys($array),
+                array_values($array)
             )    
         );
     }
