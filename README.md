@@ -271,9 +271,9 @@ There are an additional 3 parameters that `associative_implode` accepts.
 
 | Parameter # | Description | Type | Default Value |
 |:-----------:|:-----------:|:----:|:-------------:|
-| 1 | Quote the array keys | boolean | false |
-| 2 | Quote the array values | boolean | true |
-| 3 | The character used to quote | string | `"` |
+| 4 | Quote the array keys | boolean | false |
+| 5 | Quote the array values | boolean | true |
+| 6 | The character used to quote | string | `"` |
 
 To quote array keys and values with `/`
 
