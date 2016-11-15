@@ -233,7 +233,13 @@ This package also adds the global helper function `associative_implode` which wi
 
 ### Usage
 
-`associative_implode` accepts a minimum of 3 parameters, the glue between the key and value, the separator between array values and the array.
+`associative_implode` accepts a minimum of 3 parameters, see table below.
+
+| Parameter # | Description | Type | Suggested Value |
+|:-----------:|:-----------:|:----:|:---------------:|
+| 1 | The glue between the array key and value | string | `'='` |
+| 2 | The glue between each array key/value pair | string | `' '` |
+| 3 | The array to implode | array | - |
 
 For all examples the following array will be used.
 
@@ -265,9 +271,9 @@ There are an additional 3 parameters that `associative_implode` accepts.
 
 | Parameter # | Description | Type | Default Value |
 |:-----------:|:-----------:|:----:|:-------------:|
-| 1 | Quote the array keys | Boolean | false |
-| 2 | Quote the array values | Boolean | true |
-| 3 | The character used to quote | `"` |
+| 1 | Quote the array keys | boolean | false |
+| 2 | Quote the array values | boolean | true |
+| 3 | The character used to quote | string | `"` |
 
 To quote array keys and values with `/`
 
