@@ -9,14 +9,17 @@ return [
 
     /* 
      |--------------------------------------------------------------------------
-     | Link Attribute Options
+     | Link Attributes
      |--------------------------------------------------------------------------
      |
-     | Associative array of options to use with Nahid\Linkify see
-     | https://github.com/nahid/linkify for usage options
+     | Associative array of options to add to all links generated.
+     | 
+     | Note: These will override any attributes set in class, DO NOT add 
+     | href or external (or whatever your external key is) to this array. 
+     | Those will override whatever the generator generates. 
      | 
      */
-    'linkifyAttributes' => [
+    'linkAttributes' => [
         'target' => '_blank',
     ],
 
@@ -28,21 +31,7 @@ return [
      | HTML tags that don't get a closing tag.
      |
      */
-    'voidTags' => [
-        'area',
-        'base',
-        'br',
-        'col',
-        'command',
-        'embed',
-        'hr',
-        'img',
-        'input',
-        'link',
-        'meta',
-        'param',
-        'source',
-    ],
+    'voidTags' => [ 'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source' ],
 
     /*
      |--------------------------------------------------------------------------

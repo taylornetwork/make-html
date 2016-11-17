@@ -2,17 +2,14 @@
 
 namespace TaylorNetwork\MakeHTML;
 
-use Nahid\Linkify\Linkify;
-
 class HTMLGenerator
 {
     /**
-     * Associative array of options to use with Nahid\Linkify
-     * see https://github.com/nahid/linkify
+     * Associative array of attributes to add to all links
      *
      * @var array
      */
-    protected $linkifyAttributes;
+    protected $linkAttributes;
     
     /**
      * HTML void/singleton tags
@@ -54,7 +51,7 @@ class HTMLGenerator
      */
     public function __construct()
     {
-        $this->linkifyAttributes = config('makehtml.linkifyAttributes', []);
+        $this->linkAttributes = config('makehtml.linkAttributes', []);
         $this->voidTags = config('makehtml.voidTags', []);
         $this->externalKey = config('makehtml.externalKey', 'external');
         $this->openTagPattern = config('makehtml.openTagPattern', '<{tag} {attr}>');
@@ -66,32 +63,68 @@ class HTMLGenerator
      * Make the links clickable.
      *
      * @param $text
-     * @param array $options
      * @return string
      */
-    public function makeLinks($text, $options = [])
+    public function makeLinks($text)
     {
-        $linkify = new Linkify([ 'attr' => $this->linkifyAttributes, 'callback' => function($url, $defCaption, $isEmail){
-            if(!$isEmail)
+        $pattern = '~(?xi)
+              (?:
+                ((ht|f)tps?://)                    # scheme://
+                |                                  #   or
+                www\d{0,3}\.                       # "www.", "www1.", "www2." ... "www999."
+                |                                  #   or
+                www\-                              # "www-"
+                |                                  #   or
+                [a-z0-9.\-]+\.[a-z]{2,4}(?=/)      # looks like domain name followed by a slash
+              )
+              (?:                                  # Zero or more:
+                [^\s()<>]+                         # Run of non-space, non-()<>
+                |                                  #   or
+                \(([^\s()<>]+|(\([^\s()<>]+\)))*\) # balanced parens, up to 2 levels
+              )*
+              (?:                                  # End with:
+                \(([^\s()<>]+|(\([^\s()<>]+\)))*\) # balanced parens, up to 2 levels
+                |                                  #   or
+                [^\s`!\-()\[\]{};:\'".,<>?«»“”‘’]  # not a space or one of these punct chars
+              )
+        ~';
+
+        $callback = function ($urlMatch) use ($this)
+        {
+            $url = $urlMatch[0];
+
+            // Look for protocol
+            preg_match('~^(ht|f)tps?://~', $url, $protocolMatch);
+
+            if($protocolMatch)
             {
-                $caption = substr($url, 7);
-                preg_match('/www\d{0,3}\./', $caption, $match);
-
-                if($match)
-                {
-                    $caption = substr($caption, strlen($match[0]) + strpos($caption, $match[0]));
-                }
-
-                $split = explode('/', $caption);
-
-                $caption = $split[0];
-
-                return '<a href="' . $url . '" target="_blank">' . $caption . '</a>';
+                $protocol = $protocolMatch[0];
             }
-            return $url;
-        }]);
+            else
+            {
+                $protocol = 'http://';
+                $url = $protocol . $url;
+            }
 
-        return $linkify->process($text, $options);
+            // Start building caption, remove protocol from url
+            $noProtocol = substr($url, strlen($protocol));
+
+            // Check for a variation of www
+            preg_match('/www\d{0,3}\./', $noProtocol, $wwwMatch);
+
+            if($wwwMatch)
+            {
+                // Remove www
+                $noProtocol = substr($noProtocol, strlen($wwwMatch[0]));
+            }
+
+            // Only use domain name as caption
+            $caption = explode('/', $noProtocol)[0];
+
+            return $this->generateTag('a', $this->linkAttributes + [ 'href' => $url, $this->externalKey => $caption ]);
+        };
+
+        return preg_replace_callback($pattern, $callback, $text);
     }
 
     /**

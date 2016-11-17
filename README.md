@@ -294,12 +294,9 @@ The config file once published is in `config/makehtml.php`
 ## Credits
 
 - Main Author: [Sam Taylor][link-author]
-- Linkify Package: [Nahid Bin Azhar][link-nahid]
 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
 [link-author]: https://github.com/taylornetwork
-[link-nahid]: https://github.com/nahid
-[link-linkify]: https://github.com/nahid/linkify
