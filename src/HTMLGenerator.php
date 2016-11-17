@@ -89,7 +89,7 @@ class HTMLGenerator
               )
         ~';
 
-        $callback = function ($urlMatch) use ($this)
+        $callback = function ($urlMatch)
         {
             $url = $urlMatch[0];
 
