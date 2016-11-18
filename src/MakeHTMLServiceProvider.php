@@ -28,7 +28,5 @@ class MakeHTMLServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/config/makehtml.php', 'makehtml'
         );
-        
-        require_once __DIR__.'/helpers/associative_implode.php';
     }
 }

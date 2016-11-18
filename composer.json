@@ -3,7 +3,8 @@
     "description": "A trait for to convert plain text to html, inlcuding links.",
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "5.3.*"
+        "laravel/framework": "5.3.*",
+        "taylornetwork/laravel-helpers": "^1.0"
     },
     "authors": [
         {
