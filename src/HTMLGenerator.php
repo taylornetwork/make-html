@@ -159,12 +159,12 @@ class HTMLGenerator
      */
     public function generateTag($tag, $attributes)
     {
-        $openPattern = str_replace('{tag}', $tag, $this->openTagPattern);
+        $openPattern = replace_variables($this->openTagPattern, compact('tag'));
         $external = '';
         
         if(in_array($tag, $this->voidTags) && !empty($this->voidTagPattern) && $this->voidTagPattern != $this->openTagPattern)
         {
-            $openPattern = str_replace('{tag}', $tag, $this->voidTagPattern);
+            $openPattern = replace_variables($this->voidTagPattern, compact('tag'));
         }
         
         if(array_key_exists($this->externalKey, $attributes))
@@ -173,13 +173,11 @@ class HTMLGenerator
             unset($attributes[$this->externalKey]);
         }
 
-        $strAttributes = associative_implode('=', ' ', $attributes);
-        
-        $html = str_replace('{attr}', $strAttributes, $openPattern);
+        $html = replace_variables($openPattern, [ 'attr' => associative_implode('=', ' ', $attributes) ]);
         
         if(!in_array($tag, $this->voidTags))
         {
-            $html .= $external . str_replace('{tag}', $tag, $this->closeTagPattern);
+            $html .= $external . replace_variables($this->closeTagPattern, compact('tag'));
         }
         
         return $html;
