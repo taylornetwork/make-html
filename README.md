@@ -12,7 +12,7 @@ $ composer require taylornetwork/make-html
 
 ### Dependencies
 
-`TaylorNetwork\MakeHTML` will install [TaylorNetwork\LaravelHelpers][link-helpers] so you will need to set up that package for the `TaylorNetwork\MakeHTML` to work correctly.
+`TaylorNetwork\MakeHTML` will install [TaylorNetwork\LaravelHelpers][link-helpers] so you will need to set up that package for this package to work correctly.
 
 ## Setup
 
