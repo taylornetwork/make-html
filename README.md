@@ -10,6 +10,10 @@ Via Composer
 $ composer require taylornetwork/make-html
 ```
 
+### Dependencies
+
+`TaylorNetwork\MakeHTML` will install [TaylorNetwork\LaravelHelpers][link-helpers] so you will need to set up that package for the `TaylorNetwork\MakeHTML` to work correctly.
+
 ## Setup
 
 Add the service provider to the providers array in `config/app.php`.
@@ -240,3 +244,4 @@ The config file once published is in `config/makehtml.php`
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
 [link-author]: https://github.com/taylornetwork
+[link-helpers]: https://github.com/taylornetwork/laravel-helpers
