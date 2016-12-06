@@ -10,38 +10,38 @@ class HTMLGenerator
      * @var array
      */
     protected $linkAttributes;
-    
+
     /**
      * HTML void/singleton tags
-     * 
+     *
      * @var array
      */
     protected $voidTags;
 
     /**
      * External Key Word
-     * 
+     *
      * @var string
      */
     protected $externalKey;
 
     /**
      * Open Tag Pattern
-     * 
+     *
      * @var string
      */
     protected $openTagPattern;
 
     /**
      * Closing Tag Pattern
-     * 
+     *
      * @var string
      */
     protected $closeTagPattern;
 
     /**
      * Void Tag Pattern
-     * 
+     *
      * @var string
      */
     protected $voidTagPattern;
@@ -137,7 +137,7 @@ class HTMLGenerator
     {
         return nl2br($text);
     }
-    
+
     /**
      * The main function to use instead of calling everything individually.
      *
@@ -152,21 +152,22 @@ class HTMLGenerator
 
     /**
      * Generate an HTML tag
-     * 
+     *
      * @param $tag
      * @param $attributes
+     * @param $closeTag
      * @return string
      */
-    public function generateTag($tag, $attributes)
+    public function generateTag($tag, $attributes, $closeTag = true)
     {
         $openPattern = replace_variables($this->openTagPattern, compact('tag'));
         $external = '';
-        
+
         if(in_array($tag, $this->voidTags) && !empty($this->voidTagPattern) && $this->voidTagPattern != $this->openTagPattern)
         {
             $openPattern = replace_variables($this->voidTagPattern, compact('tag'));
         }
-        
+
         if(array_key_exists($this->externalKey, $attributes))
         {
             $external = $attributes[$this->externalKey];
@@ -174,13 +175,43 @@ class HTMLGenerator
         }
 
         $html = replace_variables($openPattern, [ 'attr' => associative_implode('=', ' ', $attributes) ]);
-        
+
         if(!in_array($tag, $this->voidTags))
         {
-            $html .= $external . replace_variables($this->closeTagPattern, compact('tag'));
+            $html .= $external;
+
+            if ($closeTag)
+            {
+                $html .= replace_variables($this->closeTagPattern, compact('tag'));
+            }
         }
-        
+
         return $html;
+    }
+
+    /**
+     * Close an HTML tag
+     *
+     * @param $tag
+     * @return string
+     */
+    public function closeTag($tag)
+    {
+        if(!in_array($tag, $this->voidTags))
+        {
+            return replace_variables($this->closeTagPattern, compact('tag'));
+        }
+        return '';
+    }
+
+    /**
+     * Get the external key
+     *
+     * @return string
+     */
+    public function getExternalKey()
+    {
+        return $this->externalKey;
     }
 
     /**
