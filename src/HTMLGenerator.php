@@ -182,7 +182,7 @@ class HTMLGenerator
 
             if ($closeTag)
             {
-                $html .= replace_variables($this->closeTagPattern, compact('tag'));
+                $html .= $this->closeTag($tag);
             }
         }
 
