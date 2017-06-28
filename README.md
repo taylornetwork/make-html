@@ -158,7 +158,7 @@ Returns
 
 Calls `convertLineEndings($text)` and `makeLinks($text)` and returns the converted text.
 
-##### generateTag (string $tag, array $attributes)
+##### generateTag (string $tag, array $attributes, boolean $closeTag = true)
 
 Will generate an HTML tag with any attributes given.
 
@@ -217,6 +217,34 @@ Returns
 
 ``` php
 '<div class="example-class" id="div1" name="some-name">This is external data!</div>'
+```
+
+---
+
+To generate a `<div>` tag and keep it open, to process more external data for example.
+
+``` php
+$instance->generateTag('div', $attributes, false);
+```
+
+Returns
+
+``` php
+'<div class="example-class" id="div1" name="some-name">This is external data!'
+```
+
+#### closeTag(string $tag)
+
+Closes a given tag
+
+``` php
+$instance->closeTag('div');
+```
+
+Returns
+
+``` php
+'</div>'
 ```
 
 #### Magic Method
