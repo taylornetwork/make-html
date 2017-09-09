@@ -2,9 +2,9 @@
     "name": "taylornetwork/make-html",
     "description": "A trait for to convert plain text to html, inlcuding links.",
     "require": {
-        "php": ">=5.4.0",
-        "laravel/framework": "5.4.*",
-        "taylornetwork/laravel-helpers": "^1.0.1"
+        "php": ">=7.0.0",
+        "laravel/framework": "5.5.*",
+        "taylornetwork/laravel-helpers": "^1.2"
     },
     "authors": [
         {
