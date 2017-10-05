@@ -12,9 +12,15 @@ $ composer require taylornetwork/make-html
 
 ### Dependencies
 
-`TaylorNetwork\MakeHTML` will install [TaylorNetwork\LaravelHelpers][link-helpers] so you will need to set up that package for this package to work correctly.
+`TaylorNetwork\MakeHTML` will install [TaylorNetwork\LaravelHelpers][link-helpers]. Laravel should auto discover that package, but if you run into problems you may need to include the provider manually.
 
 ## Setup
+
+This package is set up with auto discovery so you should be good to go out of the box. Check Manual Setup below if something isn't working.
+
+### Manual Setup
+
+If auto discovery doesn't work...
 
 Add the service provider to the providers array in `config/app.php`.
 
