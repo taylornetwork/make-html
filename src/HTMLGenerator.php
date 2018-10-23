@@ -47,6 +47,13 @@ class HTMLGenerator
     protected $voidTagPattern;
 
     /**
+     * Default Actions
+     *
+     * @var array
+     */
+    protected $defaultActions;
+
+    /**
      * MakeHTML constructor.
      */
     public function __construct()
@@ -57,6 +64,10 @@ class HTMLGenerator
         $this->openTagPattern = config('makehtml.openTagPattern', '<{tag} {attr}>');
         $this->closeTagPattern = config('makehtml.closeTagPattern', '</{tag}>');
         $this->voidTagPattern = config('makehtml.voidTagPattern', null);
+        $this->defaultActions = config('makehtml.defaultActions', [ 
+            'makeLinks' => true,
+            'convertLineEndings' => true,
+        ]);
     }
 
     /**
@@ -146,8 +157,17 @@ class HTMLGenerator
      */
     public function makeHTML($text)
     {
-        $html = $this->makeLinks($text);
-        return $this->convertLineEndings($html);
+        $html = $text;
+
+        if($this->defaultActions['makeLinks']) {
+            $html = $this->makeLinks($html);
+        }
+
+        if($this->defaultActions['convertLineEndings']) {
+            $html = $this->convertLineEndings($html);
+        }
+        
+        return $html;
     }
 
     /**
@@ -213,6 +233,24 @@ class HTMLGenerator
     {
         return $this->externalKey;
     }
+
+    public function __get($property) 
+    {
+        if(property_exists($this, $property)) {
+            return $this->$property;
+        }
+        return null;
+    }
+
+    public function __set($property, $value) 
+    {
+        if(property_exists($this, $property)) {
+            $this->$property = $value;
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * Call for generate tag

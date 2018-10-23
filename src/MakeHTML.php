@@ -23,6 +23,16 @@ trait MakeHTML
         return $this->getHTMLGeneratorInstance()->makeHTML($text);
     }
 
+    public function makeLinks($text)
+    {
+        return $this->getHTMLGeneratorInstance()->makeLinks($text);
+    }
+
+    public function HTMLConfig(&$generator)
+    {
+        // $generator->defaultActions['makeLinks'] = false;
+    }
+
     /**
      * Get the generator instance, or create one.
      * 
@@ -33,6 +43,7 @@ trait MakeHTML
         if(!isset($this->HTMLGenerator) || !$this->HTMLGenerator instanceof HTMLGenerator)
         {
             $this->HTMLGenerator = new HTMLGenerator();
+            $this->HTMLConfig($this->HTMLGenerator);
         }
         
         return $this->HTMLGenerator;

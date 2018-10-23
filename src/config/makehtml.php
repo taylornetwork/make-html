@@ -23,6 +23,21 @@ return [
         'target' => '_blank',
     ],
 
+    /* 
+     |--------------------------------------------------------------------------
+     | Default Generator Actions
+     |--------------------------------------------------------------------------
+     |
+     | When running makeHTML() on the generator, do all actions or just some?
+     | If customActions are enabled you can define custom methods to call
+     | that are defined in the parent class.
+     | 
+     */
+    'defaultActions' => [
+        'makeLinks' => true,
+        'convertLineEndings' => true,
+    ],
+
     /*
      |--------------------------------------------------------------------------
      | Void/Singleton HTML Tags
