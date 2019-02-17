@@ -1,29 +1,29 @@
 <?php
 /**
- * TaylorNetwork Make HTML Trait Config
+ * TaylorNetwork Make HTML Trait Config.
  *
  * @author Sam Taylor
  */
 
 return [
 
-    /* 
+    /*
      |--------------------------------------------------------------------------
      | Link Attributes
      |--------------------------------------------------------------------------
      |
      | Associative array of options to add to all links generated.
-     | 
-     | Note: These will override any attributes set in class, DO NOT add 
-     | href or external (or whatever your external key is) to this array. 
-     | Those will override whatever the generator generates. 
-     | 
+     |
+     | Note: These will override any attributes set in class, DO NOT add
+     | href or external (or whatever your external key is) to this array.
+     | Those will override whatever the generator generates.
+     |
      */
     'linkAttributes' => [
         'target' => '_blank',
     ],
 
-    /* 
+    /*
      |--------------------------------------------------------------------------
      | Default Generator Actions
      |--------------------------------------------------------------------------
@@ -31,10 +31,10 @@ return [
      | When running makeHTML() on the generator, do all actions or just some?
      | If customActions are enabled you can define custom methods to call
      | that are defined in the parent class.
-     | 
+     |
      */
     'defaultActions' => [
-        'makeLinks' => true,
+        'makeLinks'          => true,
         'convertLineEndings' => true,
     ],
 
@@ -46,7 +46,7 @@ return [
      | HTML tags that don't get a closing tag.
      |
      */
-    'voidTags' => [ 'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source' ],
+    'voidTags' => ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source'],
 
     /*
      |--------------------------------------------------------------------------
@@ -71,10 +71,10 @@ return [
      | Open Tag Pattern
      |--------------------------------------------------------------------------
      |
-     | What an open tag looks like. 
+     | What an open tag looks like.
      | {tag} will be replaced by the tag.
      | {attr} will be replaced by attributes.
-     | 
+     |
      | Usually '<{tag} {attr}>'
      |
      */
@@ -85,7 +85,7 @@ return [
      | Closing Tag Pattern
      |--------------------------------------------------------------------------
      |
-     | What a closing tag looks like. 
+     | What a closing tag looks like.
      | {tag} will be replaced by the tag.
      |
      | Usually '</tag>'

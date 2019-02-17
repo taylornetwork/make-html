@@ -14,11 +14,12 @@ class HTMLTest extends TestCase
 
     /**
      * @param \Illuminate\Foundation\Application $app
+     *
      * @return array
      */
     public function getPackageProviders($app)
     {
-        return [ 'TaylorNetwork\\MakeHTML\\MakeHTMLServiceProvider' ];
+        return ['TaylorNetwork\\MakeHTML\\MakeHTMLServiceProvider'];
     }
 
     /**
@@ -33,22 +34,21 @@ class HTMLTest extends TestCase
         require __DIR__.'/../vendor/taylornetwork/laravel-helpers/src/helpers/replace-variables/src/replace_variables.php';
     }
 
-
     public function testLineBreaksPHP_EOL()
-	{
-		$string = 'This' . PHP_EOL . 'has' . PHP_EOL . 'line' . PHP_EOL . 'breaks.';
+    {
+        $string = 'This'.PHP_EOL.'has'.PHP_EOL.'line'.PHP_EOL.'breaks.';
         $expected = 'This<br />'.PHP_EOL.'has<br />'.PHP_EOL.'line<br />'.PHP_EOL.'breaks.';
 
         $this->assertEquals($expected, $this->generator->convertLineEndings($string));
-	}
+    }
 
-	public function testGenerateLinkTag()
+    public function testGenerateLinkTag()
     {
         $expected = '<a href="http://google.com" class="test-class">Link Name</a>';
 
         $this->assertEquals($expected, $this->generator->generateTag('a', [
-            'href' => 'http://google.com',
-            'class' => 'test-class',
+            'href'     => 'http://google.com',
+            'class'    => 'test-class',
             'external' => 'Link Name',
         ]));
     }
@@ -63,8 +63,8 @@ class HTMLTest extends TestCase
 
     public function testLineBreaksAndLinks()
     {
-        $string = 'This is a' . PHP_EOL . 'line break and a link' . PHP_EOL .
-            'http://test.com/1/2/3?page=3 and more line'. PHP_EOL . 'breaks!';
+        $string = 'This is a'.PHP_EOL.'line break and a link'.PHP_EOL.
+            'http://test.com/1/2/3?page=3 and more line'.PHP_EOL.'breaks!';
 
         $expected = 'This is a<br />'.PHP_EOL.'line break and a link<br />'.PHP_EOL.
             '<a target="_blank" href="http://test.com/1/2/3?page=3">test.com</a> and more line<br />'.PHP_EOL.'breaks!';
