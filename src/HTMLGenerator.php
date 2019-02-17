@@ -5,49 +5,49 @@ namespace TaylorNetwork\MakeHTML;
 class HTMLGenerator
 {
     /**
-     * Associative array of attributes to add to all links
+     * Associative array of attributes to add to all links.
      *
      * @var array
      */
     protected $linkAttributes;
 
     /**
-     * HTML void/singleton tags
+     * HTML void/singleton tags.
      *
      * @var array
      */
     protected $voidTags;
 
     /**
-     * External Key Word
+     * External Key Word.
      *
      * @var string
      */
     protected $externalKey;
 
     /**
-     * Open Tag Pattern
+     * Open Tag Pattern.
      *
      * @var string
      */
     protected $openTagPattern;
 
     /**
-     * Closing Tag Pattern
+     * Closing Tag Pattern.
      *
      * @var string
      */
     protected $closeTagPattern;
 
     /**
-     * Void Tag Pattern
+     * Void Tag Pattern.
      *
      * @var string
      */
     protected $voidTagPattern;
 
     /**
-     * Default Actions
+     * Default Actions.
      *
      * @var array
      */
@@ -64,8 +64,8 @@ class HTMLGenerator
         $this->openTagPattern = config('makehtml.openTagPattern', '<{tag} {attr}>');
         $this->closeTagPattern = config('makehtml.closeTagPattern', '</{tag}>');
         $this->voidTagPattern = config('makehtml.voidTagPattern', null);
-        $this->defaultActions = config('makehtml.defaultActions', [ 
-            'makeLinks' => true,
+        $this->defaultActions = config('makehtml.defaultActions', [
+            'makeLinks'          => true,
             'convertLineEndings' => true,
         ]);
     }
@@ -74,6 +74,7 @@ class HTMLGenerator
      * Make the links clickable.
      *
      * @param $text
+     *
      * @return string
      */
     public function makeLinks($text)
@@ -100,21 +101,17 @@ class HTMLGenerator
               )
         ~';
 
-        $callback = function ($urlMatch)
-        {
+        $callback = function ($urlMatch) {
             $url = $urlMatch[0];
 
             // Look for protocol
             preg_match('~^(ht|f)tps?://~', $url, $protocolMatch);
 
-            if($protocolMatch)
-            {
+            if ($protocolMatch) {
                 $protocol = $protocolMatch[0];
-            }
-            else
-            {
+            } else {
                 $protocol = 'http://';
-                $url = $protocol . $url;
+                $url = $protocol.$url;
             }
 
             // Start building caption, remove protocol from url
@@ -123,8 +120,7 @@ class HTMLGenerator
             // Check for a variation of www
             preg_match('/www\d{0,3}\./', $noProtocol, $wwwMatch);
 
-            if($wwwMatch)
-            {
+            if ($wwwMatch) {
                 // Remove www
                 $noProtocol = substr($noProtocol, strlen($wwwMatch[0]));
             }
@@ -132,16 +128,17 @@ class HTMLGenerator
             // Only use domain name as caption
             $caption = explode('/', $noProtocol)[0];
 
-            return $this->generateTag('a', $this->linkAttributes + [ 'href' => $url, $this->externalKey => $caption ]);
+            return $this->generateTag('a', $this->linkAttributes + ['href' => $url, $this->externalKey => $caption]);
         };
 
         return preg_replace_callback($pattern, $callback, $text);
     }
 
     /**
-     * Convert line endings to <br> for HTML
+     * Convert line endings to <br> for HTML.
      *
      * @param $text
+     *
      * @return string
      */
     public function convertLineEndings($text)
@@ -153,29 +150,31 @@ class HTMLGenerator
      * The main function to use instead of calling everything individually.
      *
      * @param $text
+     *
      * @return string
      */
     public function makeHTML($text)
     {
         $html = $text;
 
-        if($this->defaultActions['makeLinks']) {
+        if ($this->defaultActions['makeLinks']) {
             $html = $this->makeLinks($html);
         }
 
-        if($this->defaultActions['convertLineEndings']) {
+        if ($this->defaultActions['convertLineEndings']) {
             $html = $this->convertLineEndings($html);
         }
-        
+
         return $html;
     }
 
     /**
-     * Generate an HTML tag
+     * Generate an HTML tag.
      *
      * @param $tag
      * @param $attributes
      * @param $closeTag
+     *
      * @return string
      */
     public function generateTag($tag, $attributes, $closeTag = true)
@@ -183,25 +182,21 @@ class HTMLGenerator
         $openPattern = replace_variables($this->openTagPattern, compact('tag'));
         $external = '';
 
-        if(in_array($tag, $this->voidTags) && !empty($this->voidTagPattern) && $this->voidTagPattern != $this->openTagPattern)
-        {
+        if (in_array($tag, $this->voidTags) && !empty($this->voidTagPattern) && $this->voidTagPattern != $this->openTagPattern) {
             $openPattern = replace_variables($this->voidTagPattern, compact('tag'));
         }
 
-        if(array_key_exists($this->externalKey, $attributes))
-        {
+        if (array_key_exists($this->externalKey, $attributes)) {
             $external = $attributes[$this->externalKey];
             unset($attributes[$this->externalKey]);
         }
 
-        $html = replace_variables($openPattern, [ 'attr' => associative_implode('=', ' ', $attributes) ]);
+        $html = replace_variables($openPattern, ['attr' => associative_implode('=', ' ', $attributes)]);
 
-        if(!in_array($tag, $this->voidTags))
-        {
+        if (!in_array($tag, $this->voidTags)) {
             $html .= $external;
 
-            if ($closeTag)
-            {
+            if ($closeTag) {
                 $html .= $this->closeTag($tag);
             }
         }
@@ -210,22 +205,23 @@ class HTMLGenerator
     }
 
     /**
-     * Close an HTML tag
+     * Close an HTML tag.
      *
      * @param $tag
+     *
      * @return string
      */
     public function closeTag($tag)
     {
-        if(!in_array($tag, $this->voidTags))
-        {
+        if (!in_array($tag, $this->voidTags)) {
             return replace_variables($this->closeTagPattern, compact('tag'));
         }
+
         return '';
     }
 
     /**
-     * Get the external key
+     * Get the external key.
      *
      * @return string
      */
@@ -234,38 +230,40 @@ class HTMLGenerator
         return $this->externalKey;
     }
 
-    public function __get($property) 
+    public function __get($property)
     {
-        if(property_exists($this, $property)) {
+        if (property_exists($this, $property)) {
             return $this->$property;
         }
-        return null;
     }
 
-    public function __set($property, $value) 
+    public function __set($property, $value)
     {
-        if(property_exists($this, $property)) {
+        if (property_exists($this, $property)) {
             $this->$property = $value;
+
             return true;
         }
+
         return false;
     }
 
-
     /**
-     * Call for generate tag
+     * Call for generate tag.
      *
-     * @param string $name
+     * @param string       $name
      * @param array|string $arguments
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
     {
-        if(strtolower(substr($name, -3)) == 'tag')
-        {
+        if (strtolower(substr($name, -3)) == 'tag') {
             $tag = strtolower(substr($name, 0, strlen($name) - 3));
+
             return $this->generateTag($tag, $arguments[0]);
         }
+
         return false;
     }
 }
